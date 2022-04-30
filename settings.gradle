@@ -23,3 +23,5 @@ dependencyResolutionManagement {
 rootProject.name = "TestAndroid"
 include ':app'
 //include ':nativelib'
+include ':web'
+include ':hive-hybrid'

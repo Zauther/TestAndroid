@@ -1,5 +1,6 @@
 package io.github.zauther.test.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.github.zauther.test.android.list.FuncListAdapter;
 import io.github.zauther.test.android.list.FuncListItem;
 import io.github.zauther.test.android.testdex.DexTest;
+import io.github.zauther.test.web.WebActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,6 +67,13 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Object a = sProxyMap.get(MainActivity.class);
                         Toast.makeText(MainActivity.this, "" + a, Toast.LENGTH_SHORT).show();
+                    }
+                }));
+
+                add(new FuncListItem("Web", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MainActivity.this, WebActivity.class));
                     }
                 }));
             }

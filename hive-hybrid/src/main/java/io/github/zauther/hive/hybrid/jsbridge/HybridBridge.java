@@ -9,8 +9,12 @@ public class HybridBridge {
     public static void onJSCall(String jsapiStr) {
         JSAPI jsapi = JSAPI.parse(jsapiStr);
         if (jsapi != null) {
-            Log.d("=====", jsapi.method);
+            Log.d("=====", jsapi.toString());
         }
+    }
+
+    public static void callJS(){
+
     }
 
 

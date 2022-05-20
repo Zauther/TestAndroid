@@ -1,36 +1,67 @@
 package io.github.zauther.hive.hybrid.jsbridge;
 
-import android.text.TextUtils;
+import android.net.Uri;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.alibaba.fastjson.JSONObject;
 
 import java.io.Serializable;
 
 public class JSAPI implements Serializable {
+    String namespace;
+    String token;
     public String method;
     public String params;
 
-    public JSAPI(String method, String params) {
+    public JSAPI(String namespace,  String token,String method, String params) {
+        this.namespace = namespace;
         this.method = method;
+        this.token = token;
         this.params = params;
+    }
+
+    @Override
+    public String toString() {
+        return "JSAPI{" +
+                "namespace='" + namespace + '\'' +
+                ", method='" + method + '\'' +
+                ", token='" + token + '\'' +
+                ", params='" + params + '\'' +
+                '}';
     }
 
     @Nullable
     public static JSAPI parse(String jsapi) {
+
+        /*
+        // 协议
+        String scheme = mUri.getScheme();
+        // 域名+端口号+路径+参数
+        String scheme_specific_part = mUri.getSchemeSpecificPart();
+        // 域名+端口号
+        String authority = mUri.getAuthority();
+        // fragment
+        String fragment = mUri.getFragment();
+        // 域名
+        String host = mUri.getHost();
+        // 端口号
+        int port = mUri.getPort();
+        // 路径
+        String path = mUri.getPath();
+        // 参数
+        String query = mUri.getQuery();
+         */
+
         try {
-            if (TextUtils.isEmpty(jsapi) || !jsapi.startsWith(HybridBridge.JS_API_PREFIX)) {
-                return null;
+            Uri uri = Uri.parse(jsapi);
+            if ("hivejsapi".equals(uri.getScheme())){
+                String[] host = uri.getAuthority().split(":");
+                return new JSAPI(host[0],host[1],uri.getPath().substring(1),uri.getQuery());
             }
-            JSONObject object = JSONObject.parseObject(jsapi.substring(12));
-            if (object.containsKey("method") && object.containsKey("params")) {
-                return new JSAPI(object.getString("method"), object.getString("params"));
-            }
-            return null;
+          return null;
         } catch (Throwable e) {
             return null;
         }
-
     }
 }

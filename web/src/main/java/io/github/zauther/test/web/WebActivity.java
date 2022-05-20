@@ -18,7 +18,8 @@ public class WebActivity extends AppCompatActivity {
 
 
     String testjs = "(function(){\n" +
-            "console.log(\"hivejsapi://{'method':'hello','params':{'test':'world'}}\");\n" +
+            "//console.log(\"hivejsapi://{'method':'hello','params':{'test':'world'}}\");\n" +
+            "console.log(\"hivejsapi://namespace:token_123455dsdssss34434/method?params={'test':'world'}\");\n" +
             "})();";
 
     HiveX5WebView webView;

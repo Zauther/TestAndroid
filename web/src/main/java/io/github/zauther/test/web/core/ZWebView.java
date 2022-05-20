@@ -16,6 +16,7 @@ public class ZWebView extends WebView {
 
     public ZWebView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
+        init();
     }
 
     public void init(){

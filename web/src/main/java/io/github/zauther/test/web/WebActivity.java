@@ -1,27 +1,82 @@
 package io.github.zauther.test.web;
 
+import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
+
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.tencent.smtt.sdk.WebSettings;
-import com.tencent.smtt.sdk.WebView;
 
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebSettings;
+
+import io.github.zauther.hive.web.x5.HiveX5WebChromeClient;
+import io.github.zauther.hive.web.x5.HiveX5WebView;
 import io.github.zauther.test.web.core.ZWebView;
 
 public class WebActivity extends AppCompatActivity {
 
 
-    ZWebView webView;
+    String testjs = "(function(){\n" +
+            "console.log(\"hivejsapi://{'method':'hello','params':{'test':'world'}}\");\n" +
+            "})();";
 
+    HiveX5WebView webView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_activity_web);
         webView = findViewById(R.id.web_view);
         WebSettings settings = webView.getSettings();
+        settings.setPluginsEnabled(true);
 //        settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setJavaScriptEnabled(true);
-        webView.loadUrl("https://www.ele.me");
+        //设置自适应屏幕，两者合用
+        settings.setUseWideViewPort(true); //将图片调整到适合webview的大小
+        settings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
+        //缩放操作
+        settings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
+        settings.setBuiltInZoomControls(true); //设置内置的缩放控件。若为false，则该WebView不可缩放
+        settings.setDisplayZoomControls(false); //隐藏原生的缩放控件
+
+        //其他细节操作
+        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); //关闭webview中缓存
+        settings.setAllowFileAccess(true); //设置可以访问文件
+        settings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
+        settings.setLoadsImagesAutomatically(true); //支持自动加载图片
+        settings.setDefaultTextEncodingName("utf-8");//设置编码格式
+        ZWebView.setWebContentsDebuggingEnabled(true);
+        settings.setMixedContentMode(MIXED_CONTENT_ALWAYS_ALLOW);
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+
+        webView.setWebChromeClient(new HiveX5WebChromeClient());
+
+        webView.loadUrl("https://thwj.tejiayun.com");
+        webView.evaluateJavascript(testjs, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String s) {
+
+            }
+        });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        webView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        webView.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        webView.destroy();
     }
 }

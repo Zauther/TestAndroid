@@ -2,6 +2,7 @@ package io.github.zauther.test.web;
 
 import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebSettings;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import io.github.zauther.hive.HiveHybrid;
 import io.github.zauther.hive.web.x5.HiveX5WebChromeClient;
@@ -70,8 +75,8 @@ public class WebActivity extends AppCompatActivity {
         webView.setWebChromeClient(new HiveX5WebChromeClient(webView));
 
         webView.loadUrl("https://thwj.tejiayun.com");
-        webView.evaluateJavascript(testjs);
-        webView.evaluateJavascript("");
+        webView.evaluateJavascript(getJS(this,"hivejsbridge.js"));
+        webView.evaluateJavascript(getJS(this,"test.js"));
     }
 
 
@@ -91,5 +96,37 @@ public class WebActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         webView.destroy();
+    }
+    public static String getJS(Context context, String fileName) {
+        InputStream inputStream = null;
+        ByteArrayOutputStream outputStream = null;
+        try {
+            inputStream = context.getAssets().open(fileName);
+            outputStream = new ByteArrayOutputStream();
+            int len = 0;
+            byte[] buffer = new byte[2048];
+            while ((len = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, len);
+            }
+            return new String(outputStream.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 }

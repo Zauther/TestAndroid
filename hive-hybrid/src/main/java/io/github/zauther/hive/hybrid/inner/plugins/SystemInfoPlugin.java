@@ -11,6 +11,9 @@ public class SystemInfoPlugin extends AbsPlugin {
     public void exec(IWebView webView, String namespace, String method, String params, ICallback callback) {
         Log.i("=====", namespace + ", " + method + ", " + params + ", ");
         String test = "";
-        webView.evaluateJavascript("callback(\"SystemInfoPlugin\",\"\",\"\");");
+
+        webView.evaluateJavascript("(function(window){\n" +
+                "window.hivejsapi.callback['SystemInfo_getOS']('','','')\n" +
+                "})(window);");
     }
 }

@@ -20,14 +20,13 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.tencent.mm.opensdk.** {
+-dontwarn dalvik.**
+-dontwarn com.tencent.smtt.**
+
+-keep class com.tencent.smtt.** {
     *;
 }
 
--keep class com.tencent.wxop.** {
-    *;
-}
-
--keep class com.tencent.mm.sdk.** {
+-keep class com.tencent.tbs.** {
     *;
 }

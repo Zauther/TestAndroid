@@ -1,0 +1,1 @@
+window.hivejsapi.call('SystemInfo','getOS','paramstest');

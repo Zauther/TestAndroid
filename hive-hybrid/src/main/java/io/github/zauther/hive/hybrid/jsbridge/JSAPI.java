@@ -9,10 +9,10 @@ import androidx.annotation.Nullable;
 import java.io.Serializable;
 
 public class JSAPI implements Serializable {
-    String namespace;
-    String token;
-    public String method;
-    public String params;
+    public final String namespace;
+    public final String token;
+    public final String method;
+    public final String params;
 
     public JSAPI(String namespace,  String token,String method, String params) {
         this.namespace = namespace;

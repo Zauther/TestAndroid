@@ -8,16 +8,15 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebSettings;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import io.github.zauther.hive.HiveHybrid;
-import io.github.zauther.hive.web.x5.HiveX5WebChromeClient;
-import io.github.zauther.hive.web.x5.HiveX5WebView;
+import io.github.zauther.android.hive.HiveHybrid;
+import io.github.zauther.android.hive.web.x5.HiveX5WebChromeClient;
+import io.github.zauther.android.hive.web.x5.HiveX5WebView;
 import io.github.zauther.test.web.core.ZWebView;
 
 public class WebActivity extends AppCompatActivity {

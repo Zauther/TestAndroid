@@ -1,6 +1,7 @@
 package io.github.zauther.android.hive.api.base;
 
 import android.os.Build;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -16,7 +17,7 @@ import io.github.zauther.android.hive.api.plugins.base.IHivePlugin;
 @HivePlugin(namespace = "SystemInfo")
 public class SystemInfoPlugin implements IHivePlugin {
 
-    @HiveMethod(value = "getSystemInfo", runOn = HiveThreadType.immediate, returnOn = HiveThreadType.immediate)
+    @HiveMethod(value = "getSystemInfo", runOn = HiveThreadType.current, returnOn = HiveThreadType.current)
     public void getSystemInfo(@HiveBinding(BindingType.callback) IHiveCallback<JSONObject> callback) {
         JSONObject jsonObject = new JSONObject();
         if (callback != null) {
@@ -25,9 +26,10 @@ public class SystemInfoPlugin implements IHivePlugin {
         }
     }
 
-    @HiveMethod(value = "getSystemInfoByType", runOn = HiveThreadType.immediate, returnOn = HiveThreadType.immediate)
+    @HiveMethod(value = "getSystemInfoByType", runOn = HiveThreadType.current, returnOn = HiveThreadType.current)
     public void getSystemInfo(@HiveParam("type") String requireType, @HiveBinding(BindingType.callback) IHiveCallback<JSONObject> callback) {
         JSONObject jsonObject = new JSONObject();
+        Log.d("====getSystemInfo", Thread.currentThread().getName());
         if (callback != null) {
             if("osVersion".equals(requireType)){
                 jsonObject.put("osVersion", Build.VERSION.RELEASE);

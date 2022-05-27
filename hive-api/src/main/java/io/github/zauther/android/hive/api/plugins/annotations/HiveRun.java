@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface HiveRun {
-    HiveThreadType run() default HiveThreadType.immediate;
+    HiveThreadType run() default HiveThreadType.current;
 }

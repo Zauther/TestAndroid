@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface HiveMethod {
     String value() default "";
-    HiveThreadType runOn() default HiveThreadType.immediate;
-    HiveThreadType returnOn() default HiveThreadType.immediate;
+    HiveThreadType runOn() default HiveThreadType.current;
+    HiveThreadType returnOn() default HiveThreadType.current;
 }

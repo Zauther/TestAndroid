@@ -1,9 +1,9 @@
 package io.github.zauther.android.hive.api.plugins.annotations;
 
 public enum HiveThreadType {
-    UI,
-    IO,
+    ui,
+    io,
     computation,
-    immediate,
+    current,
     newThread
 }

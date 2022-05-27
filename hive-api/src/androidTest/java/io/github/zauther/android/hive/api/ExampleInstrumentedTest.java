@@ -39,6 +39,7 @@ public class ExampleInstrumentedTest {
             @Override
             public void send(JSONObject jsonObject) {
                 System.out.println(jsonObject.toJSONString());
+                System.out.println(Thread.currentThread().getName());
             }
         });
     }

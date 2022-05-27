@@ -8,5 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface HiveMethod {
-    String name() default "";
+    String value() default "";
+    HiveThreadType runOn() default HiveThreadType.immediate;
+    HiveThreadType returnOn() default HiveThreadType.immediate;
 }

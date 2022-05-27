@@ -4,8 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,7 +45,7 @@ public class HivePlugins {
                     HiveMethod hiveMethod = m.getAnnotation(HiveMethod.class);
                     if (hiveMethod != null) {
                         containPluginMethodAnnotation = true;
-                        String aliasMethodName = hiveMethod.name();
+                        String aliasMethodName = hiveMethod.value();
                         if (TextUtils.isEmpty(aliasMethodName)) {
                             aliasMethodName = m.getName();
                         }
@@ -74,7 +74,7 @@ public class HivePlugins {
         return hivePluginInfo.getOriginMethodByMethod(method);
     }
 
-    public static boolean exec(Context context, String namespace, String method, Object param, IHiveCallback<Object> callback) {
+    public static <D> boolean exec(Context context, String namespace, String method, Map<String, Object> param, IHiveCallback<D> callback) {
         if (TextUtils.isEmpty(namespace) || TextUtils.isEmpty(method)) {
             return false;
         }
@@ -82,20 +82,23 @@ public class HivePlugins {
         if (originMethod == null || originMethod.pluginClz == null || TextUtils.isEmpty(originMethod.originMethodName)) {
             return false;
         }
+
+
         Method targetMethod = null;
+
         Method[] methods = originMethod.pluginClz.getMethods();
         for (Method m : methods) {
+            // 名字相同，注解也相同，则找到，不对为注册的插件进行处理
             if (m.getName().equals(originMethod.originMethodName)) {
-                targetMethod = m;
-                break;
+                HiveMethod hiveMethod = m.getAnnotation(HiveMethod.class);
+                if (hiveMethod != null && TextUtils.equals(hiveMethod.value(), method)) {
+                    targetMethod = m;
+                    break;
+                }
             }
         }
 
         if (targetMethod == null) {
-            return false;
-        }
-        HiveMethod hiveMethod = targetMethod.getAnnotation(HiveMethod.class);
-        if (hiveMethod == null) {
             return false;
         }
 
@@ -105,10 +108,15 @@ public class HivePlugins {
             if (parTypes.length == 0) {
                 Object invoke = targetMethod.invoke(hivePluginInstance);
                 if (callback != null) {
-                    callback.send(invoke);
+                    callback.send((D) invoke);
                 }
                 return true;
             }
+            if (param == null) {
+                param = new HashMap<>();
+            }
+
+
             Annotation[][] annos = targetMethod.getParameterAnnotations();
             Object[] args = new Object[parTypes.length];
 
@@ -134,6 +142,7 @@ public class HivePlugins {
                                 || Integer.class.equals(parTypes[i])) {
 
                             try {
+                                args[i] = param.get(name);
                                 if (args[i] == null) {
                                     args[i] = ((HiveParam) an).intDefault();
                                 }
@@ -146,6 +155,7 @@ public class HivePlugins {
                                 || Float.class.equals(parTypes[i])
                                 || float.class.isAssignableFrom(parTypes[i])) {
                             try {
+                                args[i] = param.get(name);
                                 if (args[i] == null) {
                                     args[i] = ((HiveParam) an).floatDefault();
                                 }
@@ -157,6 +167,7 @@ public class HivePlugins {
                                 || Boolean.TYPE.equals(parTypes[i])
                                 || boolean.class.equals(parTypes[i])) {
                             try {
+                                args[i] = param.get(name);
                                 if (args[i] == null) {
                                     args[i] = ((HiveParam) an).booleanDefault();
                                 }
@@ -168,6 +179,7 @@ public class HivePlugins {
                                 || Double.TYPE.equals(parTypes[i])
                                 || double.class.equals(parTypes[i])) {
                             try {
+                                args[i] = param.get(name);
                                 if (args[i] == null) {
                                     args[i] = ((HiveParam) an).doubleDefault();
                                 }
@@ -177,6 +189,7 @@ public class HivePlugins {
                         } else if (String.class.isAssignableFrom(parTypes[i])
                                 || String.class.equals(parTypes[i])) {
                             try {
+                                args[i] = param.get(name);
                                 if (args[i] == null) {
                                     args[i] = ((HiveParam) an).stringDefault();
                                 }
@@ -188,6 +201,7 @@ public class HivePlugins {
                                 || Long.class.equals(parTypes[i])
                                 || long.class.equals(parTypes[i])) {
                             try {
+                                args[i] = param.get(name);
                                 if (args[i] == null) {
                                     args[i] = ((HiveParam) an).longDefault();
                                 }
@@ -200,11 +214,7 @@ public class HivePlugins {
             }
             targetMethod.invoke(hivePluginInstance, args);
             return true;
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return false;

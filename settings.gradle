@@ -8,6 +8,7 @@ pluginManagement {
             url 'https://maven.aliyun.com/repository/central'
         }
     }
+
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -28,3 +29,4 @@ include ':hive-hybrid'
 
 //setBinding(new Binding([gradle: this]))
 //evaluate(new File(rootProject.projectDir,'flutterlib/.android/include_flutter.groovy'))
+include ':hive-api'

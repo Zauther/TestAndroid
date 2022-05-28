@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".WebActivity">
 
-    <io.github.zauther.hive.web.x5.HiveX5WebView
+    <io.github.zauther.android.hive.web.x5.HiveX5WebView
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"

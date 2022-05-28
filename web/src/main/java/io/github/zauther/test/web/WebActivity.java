@@ -8,16 +8,15 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebSettings;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import io.github.zauther.hive.HiveHybrid;
-import io.github.zauther.hive.web.x5.HiveX5WebChromeClient;
-import io.github.zauther.hive.web.x5.HiveX5WebView;
+import io.github.zauther.android.hive.HiveHybrid;
+import io.github.zauther.android.hive.web.x5.HiveX5WebChromeClient;
+import io.github.zauther.android.hive.web.x5.HiveX5WebView;
 import io.github.zauther.test.web.core.ZWebView;
 
 public class WebActivity extends AppCompatActivity {
@@ -74,9 +73,9 @@ public class WebActivity extends AppCompatActivity {
 
         webView.setWebChromeClient(new HiveX5WebChromeClient(webView));
 
-        webView.loadUrl("https://thwj.tejiayun.com");
-        webView.evaluateJavascript(getJS(this,"hivejsbridge.js"));
-        webView.evaluateJavascript(getJS(this,"test.js"));
+        webView.loadUrl("file:///android_asset/test.html");
+//        webView.evaluateJavascript(getJS(this,"hivejsbridge.js"));
+//        webView.evaluateJavascript(getJS(this,"test.js"));
     }
 
 

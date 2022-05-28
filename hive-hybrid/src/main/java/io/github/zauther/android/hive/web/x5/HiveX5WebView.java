@@ -1,0 +1,43 @@
+package io.github.zauther.android.hive.web.x5;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+
+import com.tencent.smtt.sdk.ValueCallback;
+import com.tencent.smtt.sdk.WebView;
+
+import io.github.zauther.android.hive.web.IWebView;
+
+public class HiveX5WebView extends WebView implements IWebView {
+    public HiveX5WebView(Context context, boolean b) {
+        super(context, b);
+    }
+
+    public HiveX5WebView(Context context) {
+        super(context);
+    }
+
+    public HiveX5WebView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+    }
+
+    public HiveX5WebView(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
+    }
+
+    @Override
+    public void evaluateJavascript(String javascript) {
+        evaluateJavascript(javascript, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String s) {
+
+            }
+        });
+    }
+
+    @Override
+    public View getWebView() {
+        return this;
+    }
+}

@@ -2,6 +2,7 @@ package io.github.zauther.test.android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
@@ -18,9 +20,13 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.github.zauther.android.hive.api.base.SystemInfoPlugin;
+import io.github.zauther.android.hive.api.plugins.HivePlugins;
+import io.github.zauther.android.hive.api.plugins.base.IHiveCallback;
 import io.github.zauther.test.android.func.WX;
 import io.github.zauther.test.android.list.FuncListAdapter;
 import io.github.zauther.test.android.list.FuncListItem;
@@ -36,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        HivePlugins.register(SystemInfoPlugin.class);
         funcList = findViewById(R.id.func_list);
         funcList.setLayoutManager(new LinearLayoutManager(this));
         funcList.setAdapter(new FuncListAdapter(this, new ArrayList<FuncListItem>() {
@@ -102,6 +109,33 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(MainActivity.this, WebActivity.class));
+                    }
+                }));
+
+                add(new FuncListItem("plugin", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        HivePlugins.register(SystemInfoPlugin.class);
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                HivePlugins.execOn(MainActivity.this, "SystemInfo", "getSystemInfoByType", new HashMap<String,Object>(){{
+//            put("type","osVersion");
+                                    put("type","osVersion");
+                                }}, new IHiveCallback<JSONObject>() {
+                                    @Override
+                                    public void send(JSONObject jsonObject) {
+                                        System.out.println(jsonObject.toJSONString());
+                                        System.out.println(Thread.currentThread().getName());
+                                        Log.d("====", jsonObject.toJSONString());
+                                        Log.d("====", Thread.currentThread().getName());
+                                        Toast.makeText(MainActivity.this,jsonObject.toJSONString(),Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        },"test").start();
+
                     }
                 }));
             }

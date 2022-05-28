@@ -23,7 +23,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    namespace 'io.github.zauther.hive.hybrid'
+    namespace 'io.github.zauther.android.hive.hybrid'
 }
 
 dependencies {
@@ -36,5 +36,5 @@ dependencies {
 
     api 'com.tencent.tbs:tbssdk:44181'
     implementation 'com.alibaba:fastjson:1.1.72.android'
-
+    implementation(project(':hive-api'))
 }

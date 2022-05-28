@@ -1,6 +1,7 @@
 package io.github.zauther.android.hive.hybrid.jsbridge.plugin;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,7 +52,9 @@ public class PluginManager {
         plugin.exec(webView, jsapi.namespace, jsapi.method, jsapi.params, new IHiveCallback<Map<String, Object>>() {
             @Override
             public void send(Map<String, Object> stringObjectMap) {
-                webView.evaluateJavascript("console.log('========= hello ========')");
+                Log.d("==jsapi.token===",jsapi.token);
+                webView.evaluateJavascript("console.log(`heloo:${window}`)");
+                webView.evaluateJavascript("javascript:window.hivejsapi.callback(\""+jsapi.token+"\",{\"success\":\"I'm success\"},{\"failed\":\"I'm failed\"});");
             }
         });
     }

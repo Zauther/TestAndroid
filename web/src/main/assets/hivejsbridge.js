@@ -16,66 +16,42 @@
     //call('SystemInfo','getOS','paramstest');
 
     window.hivejsapi = {
+        callbackMap: {},
         call: function ({ namespace, method, params, success, failed, timeout = 15000 }) {
             window.hivejsapi.innerCall(namespace, method, params, success, failed, timeout)
         },
         innerCall: function (namespace, method, params,success, failed, timeout) {
             var timestamp = new Date().getTime();
             var token = namespace + "_" + method + "_" + timestamp;
-            //              token_map.set(token,callback);
-            
             if (timeout > 0) {
                 window.hivejsapi.callbackMap[token] = function (_success, _failed) {
                     console.log(`${JSON.stringify(_success)} ${JSON.stringify(_failed)}`);
-                    // return new Promise((resolve, reject) => {
-                    //     if (success != null) {
-                    //         resolve(success);
-                    //     } else {
-                    //         reject(failed);
-                    //     }
-                    // });
                     success(_success);
                     failed(_failed);
                 };
-                console.log(` timeout > 0 innerCall:namespace=${namespace},method=${method},params=${params},timeout=${timeout},token=${token}`)
+//                console.log(` timeout > 0 innerCall:namespace=${namespace},method=${method},params=${params},timeout=${timeout},token=${token}`)
             } else {
                 window.hivejsapi.callbackMap[token] = function (_success, _failed) {
                     console.log(`${JSON.stringify(_success)} ${JSON.stringify(_failed)}`);
-                    // success(_success);
-                    // failed(_failed);
-                    // return new Promise((resolve, reject) => {
-                    //     // if (success != null) {
-                    //     //     resolve(success);
-                    //     // } else {
-                    //     //     reject(failed);
-                    //     // }
-                    //     resolve(_success);
-                    // });
                     success(_success);
                     failed(_failed);
-                console.log(` timeout <= 0 innerCall:namespace=${namespace},method=${method},params=${params},timeout=${timeout},token=${token}`)
+//                console.log(` timeout <= 0 innerCall:namespace=${namespace},method=${method},params=${params},timeout=${timeout},token=${token}`)
 
                 };
             }
             console.log("hivejsapi://" + namespace + ":" + token + "/" + method + "?" + params);
-
-            console.log(`return: token=${token},${window.hivejsapi.callback[token]}`);
+//            console.log(`return: token=${token},${window.hivejsapi.callback[token]}`);
             // window.hivejsapi.callback(token,{"success":"I'm success"},{"failed":"I'm failed"});
             return token;
         },
-        callbackMap: {},
+
         callback: function (token, success, failed) {
             console.log(`==callback===: token=${token},${window.hivejsapi.callback[token]}`);
             if (window.hivejsapi.callbackMap[token]) {
-                console.log(`==callback===: token=${token},${window.hivejsapi.callbackMap[token]}`);
+//                console.log(`==callback===: token=${token},${window.hivejsapi.callbackMap[token]}`);
                 (window.hivejsapi.callbackMap[token](success,failed));
             } else {
-                console.log("==callback=== function null");
-                // window.hivejsapi.callbackMap[token].then(function (value) {
-                //     // success
-                // }, function (error) {
-                //     // failure
-                // });
+//                console.log("==callback=== function null");
             }
         }
     }

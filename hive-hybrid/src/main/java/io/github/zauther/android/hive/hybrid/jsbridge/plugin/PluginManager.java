@@ -3,6 +3,8 @@ package io.github.zauther.android.hive.hybrid.jsbridge.plugin;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,6 +13,7 @@ import io.github.zauther.android.hive.hybrid.jsbridge.JSAPI;
 import io.github.zauther.android.hive.web.IWebView;
 
 public class PluginManager {
+
     static final Map<String, Class<? extends IPlugin>> pluginMaps = new ConcurrentHashMap<>();
 
     public static void register(String namespace, Class<? extends IPlugin> pluginClz) {
@@ -53,8 +56,9 @@ public class PluginManager {
             @Override
             public void send(Map<String, Object> stringObjectMap) {
                 Log.d("==jsapi.token===",jsapi.token);
-                webView.evaluateJavascript("console.log(`heloo:${window}`)");
-                webView.evaluateJavascript("javascript:window.hivejsapi.callback(\""+jsapi.token+"\",{\"success\":\"I'm success\"},{\"failed\":\"I'm failed\"});");
+//                webView.evaluateJavascript("console.log(`heloo:${window||window.hivejsapi}`)");
+
+                webView.evaluateJavascript("javascript:window.hivejsapi.callback(\""+jsapi.token+"\","+new JSONObject().toJSONString(stringObjectMap) +",{\"failed\":\"I'm failed\"});");
             }
         });
     }

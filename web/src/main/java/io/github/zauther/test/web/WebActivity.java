@@ -73,9 +73,9 @@ public class WebActivity extends AppCompatActivity {
 
         webView.setWebChromeClient(new HiveX5WebChromeClient(webView));
 
-        webView.loadUrl("https://thwj.tejiayun.com");
-        webView.evaluateJavascript(getJS(this,"hivejsbridge.js"));
-        webView.evaluateJavascript(getJS(this,"test.js"));
+        webView.loadUrl("file:///android_asset/test.html");
+//        webView.evaluateJavascript(getJS(this,"hivejsbridge.js"));
+//        webView.evaluateJavascript(getJS(this,"test.js"));
     }
 
 

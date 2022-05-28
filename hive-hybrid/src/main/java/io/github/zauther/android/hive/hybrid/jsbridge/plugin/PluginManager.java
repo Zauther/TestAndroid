@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.github.zauther.android.hive.api.plugins.base.IHiveCallback;
 import io.github.zauther.android.hive.hybrid.jsbridge.JSAPI;
 import io.github.zauther.android.hive.web.IWebView;
 
@@ -47,7 +48,12 @@ public class PluginManager {
             return;
         }
         IPlugin plugin = newPlugin(jsapi.namespace);
-        plugin.exec(webView,jsapi.namespace,jsapi.method,jsapi.token,null);
+        plugin.exec(webView, jsapi.namespace, jsapi.method, jsapi.params, new IHiveCallback<Map<String, Object>>() {
+            @Override
+            public void send(Map<String, Object> stringObjectMap) {
+                webView.evaluateJavascript("console.log('========= hello ========')");
+            }
+        });
     }
 
 }

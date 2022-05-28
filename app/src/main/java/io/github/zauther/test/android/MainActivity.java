@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        HivePlugins.register(SystemInfoPlugin.class);
         funcList = findViewById(R.id.func_list);
         funcList.setLayoutManager(new LinearLayoutManager(this));
         funcList.setAdapter(new FuncListAdapter(this, new ArrayList<FuncListItem>() {
@@ -129,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                                         System.out.println(Thread.currentThread().getName());
                                         Log.d("====", jsonObject.toJSONString());
                                         Log.d("====", Thread.currentThread().getName());
+                                        Toast.makeText(MainActivity.this,jsonObject.toJSONString(),Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }

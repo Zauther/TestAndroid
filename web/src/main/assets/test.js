@@ -1,1 +1,1 @@
-window.hivejsapi.call('SystemInfo','getOS','paramstest');
+window.hivejsapi.call('SystemInfo','getOS','{}');

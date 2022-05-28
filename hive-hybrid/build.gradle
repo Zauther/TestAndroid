@@ -36,4 +36,5 @@ dependencies {
 
     api 'com.tencent.tbs:tbssdk:44181'
     implementation 'com.alibaba:fastjson:1.1.72.android'
+    implementation(project(':hive-api'))
 }

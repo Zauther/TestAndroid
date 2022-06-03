@@ -2,6 +2,7 @@ package io.github.zauther.android.hive.web.x5;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebView;
@@ -33,5 +34,10 @@ public class HiveX5WebView extends WebView implements IWebView {
 
             }
         });
+    }
+
+    @Override
+    public View getWebView() {
+        return this;
     }
 }

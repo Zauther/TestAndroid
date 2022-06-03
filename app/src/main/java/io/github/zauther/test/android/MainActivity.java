@@ -27,7 +27,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.github.zauther.android.hive.api.base.SystemInfoPlugin;
 import io.github.zauther.android.hive.api.plugins.HivePlugins;
 import io.github.zauther.android.hive.api.plugins.base.IHiveCallback;
+import io.github.zauther.android.hive.qjs.jni.QJSContext;
 import io.github.zauther.android.hive.qjs.jni.QJSRuntime;
+import io.github.zauther.android.hive.qjs.value.QJSInt;
 import io.github.zauther.test.android.func.WX;
 import io.github.zauther.test.android.list.FuncListAdapter;
 import io.github.zauther.test.android.list.FuncListItem;
@@ -145,7 +147,14 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
 //                        Log.i("QJS",""+new NativeLib().stringFromJNI());
                         QJSRuntime runtime =QJSRuntime.newQJSRuntime();
-                        Log.i("QJS",""+runtime.getInstance());
+                        if(runtime!=null){
+                            QJSContext qjsContext = runtime.newQJSContext();
+                            if(qjsContext!=null){
+                                QJSInt a= qjsContext.eval("console.log(\"Hello World\");console.log(\"Hello \\n World\")","",QJSInt.class);
+                                Log.i("QuickJS",""+ a.getValue());
+                                a.release(qjsContext);
+                            }
+                        }
                     }
                 }));
             }

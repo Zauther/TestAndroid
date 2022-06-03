@@ -28,7 +28,7 @@ static void JAVA_Console(const char *_str){
 //        mNeedDetach = JNI_TRUE;
 //    }
     //通过全局变量g_obj 获取到要回调的类
-    jclass clazz = env->FindClass("io/github/zauther/quickjs/module/Console");
+    jclass clazz = env->FindClass("io/github/zauther/android/hive/qjs/module/Console");
 
     if (clazz == nullptr) {
 //        g_VM->DetachCurrentThread();

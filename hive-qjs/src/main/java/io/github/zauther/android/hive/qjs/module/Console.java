@@ -1,4 +1,4 @@
-package cn.cwiki.android.hive.qjs.module;
+package io.github.zauther.android.hive.qjs.module;
 
 import android.util.Log;
 

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
@@ -24,9 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 import io.github.zauther.android.hive.api.base.SystemInfoPlugin;
 import io.github.zauther.android.hive.api.plugins.HivePlugins;
 import io.github.zauther.android.hive.api.plugins.base.IHiveCallback;
+import io.github.zauther.android.hive.qjs.jni.QJSRuntime;
 import io.github.zauther.test.android.func.WX;
 import io.github.zauther.test.android.list.FuncListAdapter;
 import io.github.zauther.test.android.list.FuncListItem;
@@ -136,6 +137,15 @@ public class MainActivity extends AppCompatActivity {
                             }
                         },"test").start();
 
+                    }
+                }));
+
+                add(new FuncListItem("QJS", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        Log.i("QJS",""+new NativeLib().stringFromJNI());
+                        QJSRuntime runtime =QJSRuntime.newQJSRuntime();
+                        Log.i("QJS",""+runtime.getInstance());
                     }
                 }));
             }

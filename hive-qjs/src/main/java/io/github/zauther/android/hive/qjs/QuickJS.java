@@ -1,4 +1,4 @@
-package cn.cwiki.android.hive.qjs;
+package io.github.zauther.android.hive.qjs;
 
 import android.util.Log;
 
@@ -6,9 +6,8 @@ import androidx.annotation.Nullable;
 
 import java.util.List;
 
-import cn.cwiki.android.hive.qjs.jni.QJSRuntime;
-import cn.cwiki.android.hive.qjs.jni.QuickJSJNI;
-
+import io.github.zauther.android.hive.qjs.jni.QJSRuntime;
+import io.github.zauther.android.hive.qjs.jni.QuickJSJNI;
 
 public class QuickJS {
 

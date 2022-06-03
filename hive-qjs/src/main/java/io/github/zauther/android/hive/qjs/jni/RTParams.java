@@ -1,4 +1,4 @@
-package cn.cwiki.android.hive.qjs.jni;
+package io.github.zauther.android.hive.qjs.jni;
 
 /**
  * Description:

@@ -275,7 +275,7 @@ bool QuickJSJNI::RegisterApi(JNIEnv *env) {
     if (env == nullptr) {
         return false;
     }
-    jclass clazz = env->FindClass("io/github/zauther/quickjs/jni/QuickJSJNI");
+    jclass clazz = env->FindClass("io/github/zauther/android/hive/qjs/jni/QuickJSJNI");
     if (clazz == nullptr) {
         return false;
     }

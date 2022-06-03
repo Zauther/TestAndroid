@@ -1,7 +1,6 @@
-package cn.cwiki.android.hive.qjs.value;
+package io.github.zauther.android.hive.qjs.value;
 
-
-import cn.cwiki.android.hive.qjs.jni.QuickJSJNI;
+import io.github.zauther.android.hive.qjs.jni.QuickJSJNI;
 
 /**
  * Description:

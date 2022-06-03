@@ -30,3 +30,5 @@ include ':hive-hybrid'
 //setBinding(new Binding([gradle: this]))
 //evaluate(new File(rootProject.projectDir,'flutterlib/.android/include_flutter.groovy'))
 include ':hive-api'
+include ':hive-runtime'
+include ':hive-qjs'

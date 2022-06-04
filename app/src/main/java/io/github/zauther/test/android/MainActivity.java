@@ -15,21 +15,40 @@ import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 
+import org.chromium.net.CronetEngine;
+import org.chromium.net.CronetException;
+import org.chromium.net.CronetProvider;
+import org.chromium.net.UrlRequest;
+import org.chromium.net.UrlResponseInfo;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.WritableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 
 import io.github.zauther.android.hive.api.base.SystemInfoPlugin;
 import io.github.zauther.android.hive.api.plugins.HivePlugins;
 import io.github.zauther.android.hive.api.plugins.base.IHiveCallback;
+import io.github.zauther.android.hive.qjs.jni.QJSCallback;
 import io.github.zauther.android.hive.qjs.jni.QJSContext;
 import io.github.zauther.android.hive.qjs.jni.QJSRuntime;
+import io.github.zauther.android.hive.qjs.value.QJSFunction;
 import io.github.zauther.android.hive.qjs.value.QJSInt;
+import io.github.zauther.android.hive.qjs.value.QJSValue;
 import io.github.zauther.test.android.func.WX;
 import io.github.zauther.test.android.list.FuncListAdapter;
 import io.github.zauther.test.android.list.FuncListItem;
@@ -152,9 +171,83 @@ public class MainActivity extends AppCompatActivity {
                             if(qjsContext!=null){
                                 QJSInt a= qjsContext.eval("console.log(\"Hello World\");console.log(\"Hello \\n World\")","",QJSInt.class);
                                 Log.i("QuickJS",""+ a.getValue());
+
+
+                                QJSInt qjsInt= new QJSInt(qjsContext.getInstance());
+                                QJSFunction function = new QJSFunction(qjsContext.getInstance(),1,qjsInt);
+
+                                qjsContext.createJSFunction(new QJSCallback() {
+                                    @Override
+                                    public QJSValue call(QJSContext qjsContext, QJSValue... params) {
+                                        return null;
+                                    }
+                                });
+
                                 a.release(qjsContext);
                             }
                         }
+                    }
+                }));
+                add(new FuncListItem("Cronet", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final int BYTE_BUFFER_CAPACITY_BYTES = 64 * 1024;
+                        ByteArrayOutputStream bytesReceived = new ByteArrayOutputStream();
+                        WritableByteChannel receiveChannel = Channels.newChannel(bytesReceived);
+
+                        CronetEngine.Builder myBuilder = new CronetEngine.Builder(MainActivity.this);
+                        CronetEngine cronetEngine = myBuilder.build();
+                        List<CronetProvider> enabledProviders =
+                                CronetProvider.getAllProviders(MainActivity.this)
+                                        .stream()
+                                        .filter(CronetProvider::isEnabled)
+                                        .collect(Collectors.toList());
+                        Executor executor = Executors.newSingleThreadExecutor();
+                        UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
+                                "https://www.example.com", new UrlRequest.Callback() {
+                                    @Override
+                                    public void onRedirectReceived(UrlRequest request, UrlResponseInfo info, String newLocationUrl) throws Exception {
+                                        Log.i("Cronet",info.toString());
+                                        request.followRedirect();
+                                    }
+
+                                    @Override
+                                    public void onResponseStarted(UrlRequest request, UrlResponseInfo info) throws Exception {
+                                        Log.i("Cronet",info.toString());
+                                        request.read(ByteBuffer.allocateDirect(BYTE_BUFFER_CAPACITY_BYTES));
+                                    }
+
+                                    @Override
+                                    public void onReadCompleted(UrlRequest request, UrlResponseInfo info, ByteBuffer byteBuffer) throws Exception {
+                                        byteBuffer.flip();
+
+                                        try {
+                                            receiveChannel.write(byteBuffer);
+                                        } catch (IOException e) {
+                                            android.util.Log.i("Cronet", "IOException during ByteBuffer read. Details: ", e);
+                                        }
+                                        // Reset the buffer to prepare it for the next read
+                                        byteBuffer.clear();
+
+                                        // Continue reading the request
+                                        request.read(byteBuffer);;
+                                    }
+
+                                    @Override
+                                    public void onSucceeded(UrlRequest request, UrlResponseInfo info) {
+
+                                        byte[] bodyBytes = bytesReceived.toByteArray();
+                                        Log.i("Cronet",new String(bodyBytes));
+                                    }
+
+                                    @Override
+                                    public void onFailed(UrlRequest request, UrlResponseInfo info, CronetException error) {
+                                        Log.e("Cronet",info.toString());
+                                    }
+                                }, executor);
+
+                        UrlRequest request = requestBuilder.build();
+                        request.start();
                     }
                 }));
             }

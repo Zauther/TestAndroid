@@ -12,18 +12,22 @@ import io.github.zauther.android.hive.qjs.jni.QuickJSJNI;
  * @data 21-4-3
  */
 public class QJSValue {
-    long tag;
-    long instance;
+    int tag;
+    long valInstance;
 
-    public QJSValue(long instance) {
-        this.instance = instance;
+    public QJSValue(long valInstance) {
+        this.valInstance = valInstance;
+
     }
 
+    public long getValInstance(){
+        return valInstance;
+    }
 
     public void release(QJSContext context) {
-        if (instance != 0 && context != null && context.getInstance() != 0) {
+        if (valInstance != 0 && context != null && context.getInstance() != 0) {
             try {
-                QuickJSJNI.nativeReleaseJSValue(context.getInstance(), instance);
+                QuickJSJNI.nativeReleaseJSValue(context.getInstance(), valInstance);
             } catch (Throwable e) {
                 Log.e("QuickJS", e.toString());
             }

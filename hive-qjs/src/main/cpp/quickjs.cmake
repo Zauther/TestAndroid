@@ -1,7 +1,7 @@
 # fetch quickjs source code
 include(FetchContent)
 FetchContent_Declare(quickjs
-        GIT_REPOSITORY https://github.com/bellard/quickjs.git
+        GIT_REPOSITORY git@github.com:bellard/quickjs.git
         GIT_TAG b5e62895c619d4ffc75c9d822c8d85f1ece77e5b)
 FetchContent_MakeAvailable(quickjs)
 

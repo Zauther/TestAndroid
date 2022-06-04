@@ -14,6 +14,7 @@ set ( CMAKE_VERBOSE_MAKEFILE on  )
 
 include("quickjs.cmake")
 include("qjsmodule.cmake")
+include("cronet.cmake")
 
 #FetchContent_GetProperties(quickjs)
 #if(NOT quickjs_POPULATED)

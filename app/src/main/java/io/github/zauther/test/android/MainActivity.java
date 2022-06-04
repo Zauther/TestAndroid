@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.util.ResourceUtils;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXTextObject;
@@ -46,6 +47,8 @@ import io.github.zauther.android.hive.api.plugins.base.IHiveCallback;
 import io.github.zauther.android.hive.qjs.jni.QJSCallback;
 import io.github.zauther.android.hive.qjs.jni.QJSContext;
 import io.github.zauther.android.hive.qjs.jni.QJSRuntime;
+import io.github.zauther.android.hive.qjs.jni.QuickJSJNI;
+import io.github.zauther.android.hive.qjs.module.CronetQJSModule;
 import io.github.zauther.android.hive.qjs.value.QJSFunction;
 import io.github.zauther.android.hive.qjs.value.QJSInt;
 import io.github.zauther.android.hive.qjs.value.QJSValue;
@@ -166,12 +169,14 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
 //                        Log.i("QJS",""+new NativeLib().stringFromJNI());
                         QJSRuntime runtime =QJSRuntime.newQJSRuntime();
+                        CronetQJSModule.init();
                         if(runtime!=null){
                             QJSContext qjsContext = runtime.newQJSContext();
                             if(qjsContext!=null){
                                 QJSInt a= qjsContext.eval("console.log(\"Hello World\");console.log(\"Hello \\n World\")","",QJSInt.class);
                                 Log.i("QuickJS",""+ a.getValue());
 
+                                long undefined =QuickJSJNI.nativeQJSUndefined();
 
                                 QJSInt qjsInt= new QJSInt(qjsContext.getInstance());
                                 QJSFunction function = new QJSFunction(qjsContext.getInstance(),1,qjsInt);
@@ -182,6 +187,18 @@ public class MainActivity extends AppCompatActivity {
                                         return null;
                                     }
                                 });
+
+                                File file = MainActivity.this.getCacheDir();
+                                File dest = new File(file,"cronet-qjs-module.so");
+                                ResourceUtils.copyFileFromAssets("libcronet-qjs-module.so",dest.getAbsolutePath());
+                                String js= dest.getAbsolutePath();
+
+                                js = "import { fib } from \""+dest.getAbsolutePath()+"\";\n" +
+                                        "\n" +
+                                        "fib(10);\n" +
+                                        "console.log(\"fib(10)=\", fib(10));";
+//                                js = "console.log(\"Hello == World\");";
+                                qjsContext.eval(js,"",QJSInt.class);
 
                                 a.release(qjsContext);
                             }

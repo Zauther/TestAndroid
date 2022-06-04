@@ -1,5 +1,5 @@
 
-set(PLUGIN_NAME "wrapper")
+set(PLUGIN_NAME "cronet-qjs-module")
 
 
 if(IOS)
@@ -8,7 +8,7 @@ if(IOS)
 #            "wrapper_utils.cc"
 #            "upload_data_provider.cc"
 #            "cronet_impl/sample_executor.cc"
-            "module/cronet_module/cronet_qjs_module.cpp"
+            "module/cronet_module/cronet_qjs_module.cc"
             )
 else()
     add_library(${PLUGIN_NAME} SHARED
@@ -16,9 +16,10 @@ else()
 #            "wrapper_utils.cc"
 #            "upload_data_provider.cc"
 #            "cronet_impl/sample_executor.cc"
-            "module/cronet_module/cronet_qjs_module.cpp"
+            "module/cronet_module/cronet_qjs_module.cc"
             )
 endif()
+find_library(log-lib log )
 
 include_directories(${quickjs_SOURCE_DIR})
 

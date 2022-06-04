@@ -7,6 +7,10 @@ pluginManagement {
         maven {
             url 'https://maven.aliyun.com/repository/central'
         }
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+
     }
 
 }
@@ -18,6 +22,9 @@ dependencyResolutionManagement {
         }
         maven {
             url 'https://maven.aliyun.com/repository/central'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
         }
     }
 }
@@ -32,3 +39,4 @@ include ':hive-hybrid'
 include ':hive-api'
 include ':hive-runtime'
 include ':hive-qjs'
+include ':hive-network'

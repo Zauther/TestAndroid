@@ -7,6 +7,16 @@
 #include <quickjs.h>
 #include <jni.h>
 
+#define COPY_JS_VALUE(JS_CONTEXT, JS_VALUE, RESULT)                                    \
+    do {                                                                               \
+        void *__copy__ = js_malloc_rt(JS_GetRuntime(JS_CONTEXT), sizeof(JSValue));     \
+        if (__copy__ != NULL) {                                                        \
+            memcpy(__copy__, &(JS_VALUE), sizeof(JSValue));                            \
+            (RESULT) = static_cast<JSValue *>(__copy__);                                                       \
+        } else {                                                                       \
+            JS_FreeValue((JS_CONTEXT), (JS_VALUE));                                    \
+        }                                                                              \
+    } while (0)
 
 class QuickJS {
 private:

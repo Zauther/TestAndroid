@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "io.github.zauther.test.android"
-        minSdk 21
+        minSdk 24
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -55,4 +55,8 @@ dependencies {
     implementation project(':hive-qjs')
 //    implementation project(':nativelib')
 //    implementation(':flutter')
+//    implementation "com.google.android.gms:play-services-module.cronet_module.cronet:17.0.1"
+    implementation 'org.microg:cronet-api:92.0.4509.1'
+    implementation 'org.microg:cronet-common:92.0.4509.1'
+    implementation 'org.microg:cronet-native:92.0.4509.1'
 }

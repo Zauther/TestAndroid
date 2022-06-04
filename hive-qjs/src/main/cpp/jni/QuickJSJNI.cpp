@@ -195,6 +195,40 @@ static void ReleaseJSValue(JNIEnv *env, jclass __unused clazz, jlong context, jl
     js_free_rt(JS_GetRuntime(ctx), value);
 }
 
+static long GetGlobalObject(JNIEnv *env, jclass __unused clazz, jlong context) {
+    auto * ctx = reinterpret_cast<JSContext *>(context);
+    JSValue global_obj = JS_GetGlobalObject(ctx);
+    return reinterpret_cast<long>(&global_obj);;
+}
+
+static long NewJSObject(JNIEnv *env, jclass __unused clazz, jlong context) {
+    auto * ctx = reinterpret_cast<JSContext *>(context);
+    JSValue obj = JS_NewObject(ctx);
+    return reinterpret_cast<long>(&obj);;
+}
+
+static long NewFunction(JNIEnv *env, jclass __unused clazz, jlong context, jobject obj, jstring javaMethodName, jstring methodSignature, jstring jsMethodName,jint lenght) {
+    auto * ctx = reinterpret_cast<JSContext *>(context);
+    std::function<JSValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)> a;
+//    JSCFunction* f = a.;
+    JSValue func = JS_NewCFunction(ctx, js_print, env->GetStringUTFChars(jsMethodName, NULL), lenght);
+//    JS_Call()
+    return reinterpret_cast<long>(&func);;
+}
+
+static long SetProperty(JNIEnv *env, jclass __unused clazz, jlong context, jobject obj, jstring javaMethodName, jstring methodSignature, jstring jsMethodName,jint lenght) {
+    auto * ctx = reinterpret_cast<JSContext *>(context);
+    std::function<JSValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)> a;
+//    JSCFunction* f = a.;
+    JSValue func = JS_NewCFunction(ctx, js_print, env->GetStringUTFChars(jsMethodName, NULL), lenght);
+//    JS_Call()
+    return reinterpret_cast<long>(&func);;
+}
+
+static long QJSUndefined(JNIEnv *env, jclass __unused clazz) {
+    JSValue undefined = JS_UNDEFINED;
+    return reinterpret_cast<long>(&(undefined));
+}
 
 static JNINativeMethod gMethod[] = {
         {
@@ -261,6 +295,34 @@ static JNINativeMethod gMethod[] = {
                 .name ="nativeReleaseJSValue",
                 .signature = "(JJ)V",
                 .fnPtr = reinterpret_cast<void *>(&ReleaseJSValue)
+        },
+        {
+                .name ="nativeGetGlobalObject",
+                .signature = "(J)J",
+                .fnPtr = reinterpret_cast<void *>(&GetGlobalObject)
+        },
+        {
+                .name ="nativeNewJSObject",
+                .signature = "(J)J",
+                .fnPtr = reinterpret_cast<void *>(&NewJSObject)
+        }
+        ,
+        {
+                .name ="nativeNewFunction",
+                .signature = "(JLjava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)J",
+                .fnPtr = reinterpret_cast<void *>(&NewFunction)
+        }
+        ,
+        {
+                .name ="setProperty",
+                .signature = "(JJLjava/lang/String;J)J",
+                .fnPtr = reinterpret_cast<void *>(&SetProperty)
+        }
+        ,
+        {
+                .name ="nativeQJSUndefined",
+                .signature = "()J",
+                .fnPtr = reinterpret_cast<void *>(&QJSUndefined)
         }
 
 };

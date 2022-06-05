@@ -72,43 +72,48 @@ public class MainActivity extends AppCompatActivity {
         funcList.setLayoutManager(new LinearLayoutManager(this));
         funcList.setAdapter(new FuncListAdapter(this, new ArrayList<FuncListItem>() {
             {
-                add(new FuncListItem("Dex", new View.OnClickListener() {
+                add(new FuncListItem("动态加载Dex并执行里面的方法", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        File dest = DexTest.copyAsset(MainActivity.this, "libs/nativelibdex.aar", false);
+                        File dest = DexTest.copyAsset(MainActivity.this, "test.apk", false);
                         if (dest != null) {
                             DexTest.loadDexClass(MainActivity.this, dest);
                         }
                     }
                 }));
 
-                add(new FuncListItem("Dex-Aar Load", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            Class libClazz = Class.forName("io.github.zauther.test.nativelib.NativeLib");
-                            Constructor<?> localConstructor = libClazz.getConstructor();
+//                add(new FuncListItem("Dex-Aar Load", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        try {
+//                            File dest = DexTest.copyAsset(MainActivity.this, "nativelib.aar", false);
+//                            if (dest != null) {
+//                                DexTest.loadAarClass(MainActivity.this, dest);
+//                            }
 //
-                            Object obj = localConstructor.newInstance();
-                            Method mMethodWrite = libClazz.getMethod("stringFromJava");
-                            mMethodWrite.setAccessible(true);
-                            String str = (String) mMethodWrite.invoke(obj);
-                            Toast.makeText(MainActivity.this, "result is " + str, Toast.LENGTH_SHORT).show();
-                        } catch (Throwable e) {
-                            Toast.makeText(MainActivity.this, "result is " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }));
+////                            Class libClazz = Class.forName("io.github.zauther.test.nativelib.NativeLib");
+////                            Constructor<?> localConstructor = libClazz.getConstructor();
+//////
+////                            Object obj = localConstructor.newInstance();
+////                            Method mMethodWrite = libClazz.getMethod("stringFromJava");
+////                            mMethodWrite.setAccessible(true);
+////                            String str = (String) mMethodWrite.invoke(obj);
+////                            Toast.makeText(MainActivity.this, "result is " + str, Toast.LENGTH_SHORT).show();
+//                        } catch (Throwable e) {
+//                            Toast.makeText(MainActivity.this, "result is " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                }));
 
-                add(new FuncListItem("Test Bug", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Object a = sProxyMap.get(MainActivity.class);
-                        Toast.makeText(MainActivity.this, "" + a, Toast.LENGTH_SHORT).show();
-                    }
-                }));
+//                add(new FuncListItem("Test Bug", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Object a = sProxyMap.get(MainActivity.class);
+//                        Toast.makeText(MainActivity.this, "" + a, Toast.LENGTH_SHORT).show();
+//                    }
+//                }));
 
-                add(new FuncListItem("WX", new View.OnClickListener() {
+                add(new FuncListItem("WX授权测试", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 //                        SendAuth.Req req = new SendAuth.Req();
@@ -130,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                         WX.req(MainActivity.this, req);
                     }
                 }));
-                add(new FuncListItem("Web", new View.OnClickListener() {
+                add(new FuncListItem("Web页面使用JSAPI调用到Android中的方法", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(MainActivity.this, WebActivity.class));
@@ -164,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }));
 
-                add(new FuncListItem("QJS", new View.OnClickListener() {
+                add(new FuncListItem("通过QJS执行js，并回调到android", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 //                        Log.i("QJS",""+new NativeLib().stringFromJNI());
@@ -173,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                         if(runtime!=null){
                             QJSContext qjsContext = runtime.newQJSContext();
                             if(qjsContext!=null){
-                                QJSInt a= qjsContext.eval("console.log(\"Hello World\");console.log(\"Hello \\n World\")","",QJSInt.class);
+                                QJSInt a= qjsContext.eval("console.log(\"Hello World\");console.log(\"Hello \\n World\");22","",QJSInt.class);
                                 Log.i("QuickJS",""+ a.getValue());
 
                                 long undefined =QuickJSJNI.nativeQJSUndefined();
@@ -196,16 +201,16 @@ public class MainActivity extends AppCompatActivity {
                                 js = "import { fib } from \""+dest.getAbsolutePath()+"\";\n" +
                                         "\n" +
                                         "fib(10);\n" +
-                                        "console.log(\"fib(10)=\", fib(10));";
+                                        "console.log(\"fib(10)=\", fib(10));fib(10)";
 //                                js = "console.log(\"Hello == World\");";
-                                qjsContext.eval(js,"",QJSInt.class);
-
+                                a =qjsContext.eval(js,"",QJSInt.class);
+                                Log.i("QuickJS",""+ a.getValue());
                                 a.release(qjsContext);
                             }
                         }
                     }
                 }));
-                add(new FuncListItem("Cronet", new View.OnClickListener() {
+                add(new FuncListItem("通过Cronet发送网络请求", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final int BYTE_BUFFER_CAPACITY_BYTES = 64 * 1024;

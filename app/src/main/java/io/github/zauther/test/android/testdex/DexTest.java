@@ -39,7 +39,41 @@ public class DexTest {
         if (dexFile == null || !dexFile.exists() || !dexFile.isFile()) {
             return;
         }
+//
+        File cacheFile = context.getCacheDir();
+        DexClassLoader dexClassLoader = new DexClassLoader(dexFile.getAbsolutePath(), cacheFile.getAbsolutePath(), new File(context.getCacheDir().getAbsolutePath(),"lib/jni/arm64-v8a").getAbsolutePath(), context.getClass().getClassLoader());
+//        try {
+//            Class libClazz = dexClassLoader.loadClass("io.github.zauther.test.nativelib.NativeLib");
+//            Constructor<?> localConstructor = libClazz.getConstructor();
+////
+//            Object obj = localConstructor.newInstance();
+//            Method mMethodWrite = libClazz.getMethod("stringFromJava");
+//            mMethodWrite.setAccessible(true);
+//            String str = (String) mMethodWrite.invoke(obj);
+//            Toast.makeText(context, "result is " + str, Toast.LENGTH_SHORT).show();
+//        } catch (Exception e) {
+//            Toast.makeText(context, "result is error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//        }
 
+        try {
+            Class libClazz = dexClassLoader.loadClass("io.github.zauther.test.testdex.TestDexLoad");
+            Constructor<?> localConstructor = libClazz.getConstructor();
+            Object obj = localConstructor.newInstance();
+            Method mMethodWrite = libClazz.getMethod("getString");
+            mMethodWrite.setAccessible(true);
+            String str = (String) mMethodWrite.invoke(obj);
+            Toast.makeText(context, "result from test.apk is " + str, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(context, "result is error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public static void loadAarClass(Context context, File dexFile) {
+        if (dexFile == null || !dexFile.exists() || !dexFile.isFile()) {
+            return;
+        }
+//
         File cacheFile = context.getCacheDir();
         DexClassLoader dexClassLoader = new DexClassLoader(dexFile.getAbsolutePath(), cacheFile.getAbsolutePath(), new File(context.getCacheDir().getAbsolutePath(),"lib/jni/arm64-v8a").getAbsolutePath(), context.getClass().getClassLoader());
         try {
@@ -54,18 +88,6 @@ public class DexTest {
         } catch (Exception e) {
             Toast.makeText(context, "result is error " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-//        try {
-//            Class libClazz = dexClassLoader.loadClass("io.github.zauther.test.testdex.TestDexLoad");
-//            Constructor<?> localConstructor = libClazz.getConstructor();
-//            Object obj = localConstructor.newInstance();
-//            Method mMethodWrite = libClazz.getMethod("getString");
-//            mMethodWrite.setAccessible(true);
-//            String str = (String) mMethodWrite.invoke(obj);
-//            Toast.makeText(context, "result is " + str, Toast.LENGTH_SHORT).show();
-//        } catch (Exception e) {
-//            Toast.makeText(context, "result is error " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//        }
 
     }
 }

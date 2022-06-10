@@ -44,6 +44,7 @@ import java.util.stream.Collectors;
 import io.github.zauther.android.hive.api.base.SystemInfoPlugin;
 import io.github.zauther.android.hive.api.plugins.HivePlugins;
 import io.github.zauther.android.hive.api.plugins.base.IHiveCallback;
+import io.github.zauther.android.hive.network.HiveNetwork;
 import io.github.zauther.android.hive.qjs.jni.QJSCallback;
 import io.github.zauther.android.hive.qjs.jni.QJSContext;
 import io.github.zauther.android.hive.qjs.jni.QJSRuntime;
@@ -55,6 +56,7 @@ import io.github.zauther.android.hive.qjs.value.QJSValue;
 import io.github.zauther.test.android.func.WX;
 import io.github.zauther.test.android.list.FuncListAdapter;
 import io.github.zauther.test.android.list.FuncListItem;
+import io.github.zauther.test.android.page.TestActivity;
 import io.github.zauther.test.android.testdex.DexTest;
 import io.github.zauther.test.web.WebActivity;
 
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("TestActivity==", "onCreate: "+this.toString()+", taskId="+this.getTaskId());
         HivePlugins.register(SystemInfoPlugin.class);
         funcList = findViewById(R.id.func_list);
         funcList.setLayoutManager(new LinearLayoutManager(this));
@@ -79,6 +82,14 @@ public class MainActivity extends AppCompatActivity {
                         if (dest != null) {
                             DexTest.loadDexClass(MainActivity.this, dest);
                         }
+                    }
+                }));
+                add(new FuncListItem("test activity", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, TestActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                     }
                 }));
 
@@ -270,6 +281,13 @@ public class MainActivity extends AppCompatActivity {
 
                         UrlRequest request = requestBuilder.build();
                         request.start();
+                    }
+                }));
+
+                add(new FuncListItem("通过Cronet Native发送网络请求", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        HiveNetwork.test();
                     }
                 }));
             }

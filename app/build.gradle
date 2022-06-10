@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.blankj:utilcodex:1.31.0'
     implementation project(':web')
     implementation project(':hive-qjs')
+    implementation project(':hive-network')
 //    implementation project(':nativelib')
 //    implementation(':flutter')
 //    implementation "com.google.android.gms:play-services-module.cronet_module.cronet:17.0.1"
